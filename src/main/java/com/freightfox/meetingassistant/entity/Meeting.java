@@ -11,6 +11,15 @@ import java.util.List;
 public class Meeting {
 
     @Id
+    @SequenceGenerator(
+            name = "meeting_sequence",
+            sequenceName = "meeting_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "meeting_sequence"
+    )
     Long meetingId;
     String title;
     String description;
@@ -20,7 +29,7 @@ public class Meeting {
             name = "host_id",
             referencedColumnName = "userId"
     )
-    User hostId;
+    User host;
 
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime startTime;
@@ -28,7 +37,9 @@ public class Meeting {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime endTime;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = CascadeType.PERSIST
+    )
     @JoinTable(
             name = "user_meeting_map",
             joinColumns = @JoinColumn(
@@ -42,4 +53,79 @@ public class Meeting {
     )
     List<User> users;
 
+    public Meeting() {
+    }
+
+    public Long getMeetingId() {
+        return meetingId;
+    }
+
+    public void setMeetingId(Long meetingId) {
+        this.meetingId = meetingId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public User getHostId() {
+        return host;
+    }
+
+    public void setHost(User host) {
+        this.host = host;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    public List<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(List<User> users) {
+        this.users = users;
+    }
+
+    public void setUsersFromParticipants(List<Long> participants){
+
+    }
+
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "meetingId=" + meetingId +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", host=" + host +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", users=" + users +
+                '}';
+    }
 }
