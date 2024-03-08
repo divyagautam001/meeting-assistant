@@ -11,15 +11,7 @@ import java.util.List;
 public class Meeting {
 
     @Id
-    @SequenceGenerator(
-            name = "meeting_sequence",
-            sequenceName = "meeting_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "meeting_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long meetingId;
     String title;
     String description;
@@ -125,7 +117,6 @@ public class Meeting {
                 ", host=" + host +
                 ", startTime=" + startTime +
                 ", endTime=" + endTime +
-                ", users=" + users +
                 '}';
     }
 }

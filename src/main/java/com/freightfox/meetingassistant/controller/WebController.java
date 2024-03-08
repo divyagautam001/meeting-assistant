@@ -1,9 +1,9 @@
 package com.freightfox.meetingassistant.controller;
 
-import com.freightfox.meetingassistant.entity.Meeting;
-import com.freightfox.meetingassistant.entity.MeetingRequest;
-import com.freightfox.meetingassistant.entity.TimeSlot;
+import com.freightfox.meetingassistant.entity.*;
 import com.freightfox.meetingassistant.service.BookingService;
+import com.freightfox.meetingassistant.service.ConflictCheckService;
+import com.freightfox.meetingassistant.service.SlotCheckService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -23,33 +26,37 @@ public class WebController {
     @Autowired
     private BookingService bookingService;
 
+    @Autowired
+    private ConflictCheckService conflictCheckService;
+
+    @Autowired
+    private SlotCheckService slotCheckService;
+
     @PostMapping("/meetings/book")
-    public ResponseEntity<Map<String, String>> bookMeeting(@RequestBody @Valid MeetingRequest meetingRequest) {
+    public ResponseEntity<Map<String, Object>> bookMeeting(@RequestBody @Valid MeetingRequest meetingRequest) {
         logger.info(meetingRequest.toString());
         Meeting createdMeeting = bookingService.bookMeeting(meetingRequest);
-        Map<String, String> responseBody = new HashMap<>();
+        Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("message", "Meeting booked successfully");
-        responseBody.put("meetingId", String.valueOf(createdMeeting.getMeetingId()));
+        responseBody.put("meetingId", createdMeeting.getMeetingId());
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("/meetings/free-slots")
-    public ResponseEntity<Map<String,List<TimeSlot>>> getFreeSlotsBetweenTwoUsers(@RequestParam Long userOneId, @RequestParam Long userTwoId, @RequestParam Integer duration) {
+    public ResponseEntity<Map<String, List<TimeSlot>>> getFreeSlotsBetweenTwoUsers(@RequestParam Long userOneId, @RequestParam Long userTwoId, @RequestParam Integer duration) {
         logger.info("user 1 - {} \n user 2 - {} \n duration - {}", userOneId, userTwoId, duration);
+        List<TimeSlot> freeTimeSlots = slotCheckService.getFreeTimeSlots(userOneId,userTwoId,duration);
         Map<String, List<TimeSlot>> temp = new HashMap<>();
-        List<TimeSlot> res = new ArrayList<>();
-        res.add(new TimeSlot(LocalDateTime.parse("2017-01-13T07:09:42"), LocalDateTime.parse("2017-01-13T07:09:42")));
-        temp.put("freeSlots",res);
+          temp.put("freeSlots", freeTimeSlots);
         return ResponseEntity.ok(temp);
     }
 
     @GetMapping("/meetings/{meetingId}/check-conflicts")
-    public ResponseEntity<Map<String, List<Long>>> getConflictingParticipants(@PathVariable Long meetingId) {
+    public ResponseEntity<Map<String, List<UserDto>>> getConflictingParticipants(@PathVariable Long meetingId) {
         logger.info("meeting id - {}", meetingId);
-        Map<String, List<Long>> temp = new HashMap<>();
-        List<Long> res = new ArrayList<>();
-        res.add(12345L);
-        temp.put("conflictingParticipants", res);
+        List<UserDto> conflictingUserIdList = conflictCheckService.getConflictingParticipants(meetingId);
+        Map<String, List<UserDto>> temp = new HashMap<>();
+        temp.put("conflictingParticipants", conflictingUserIdList);
         return ResponseEntity.ok(temp);
     }
 }
