@@ -1,0 +1,97 @@
+{
+	"info": {
+		"_postman_id": "ab2d7b1d-e479-4117-9f25-27b89c18e6d5",
+		"name": "MeetingAssistant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13138756"
+	},
+	"item": [
+		{
+			"name": "bookMeeting",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"hostId\": 1,\n  \"title\": \"Meeting Title\",\n  \"description\": \"Meeting Description\",\n  \"startTime\": \"2024-03-08T22:00:00\",\n  \"endTime\": \"2024-03-08T23:15:00\",\n  \"participants\": [2]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/meetings/book",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"meetings",
+						"book"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getFreeSlotsBetweenTwoUsers",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/meetings/free-slots?userOneId=7&userTwoId=8&duration=30",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"meetings",
+						"free-slots"
+					],
+					"query": [
+						{
+							"key": "userOneId",
+							"value": "7"
+						},
+						{
+							"key": "userTwoId",
+							"value": "8"
+						},
+						{
+							"key": "duration",
+							"value": "30"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getConflictingParticipants",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/meetings/2/check-conflicts",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"meetings",
+						"2",
+						"check-conflicts"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
