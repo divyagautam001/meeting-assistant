@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 
 @Entity
@@ -43,7 +44,7 @@ public class Meeting {
                     referencedColumnName = "userId"
             )
     )
-    List<User> users;
+    Set<User> users;
 
     public Meeting() {
     }
@@ -96,15 +97,15 @@ public class Meeting {
         this.endTime = endTime;
     }
 
-    public List<User> getUsers() {
+    public Set<User> getUsers() {
         return users;
     }
 
-    public void setUsers(List<User> users) {
+    public void setUsers(Set<User> users) {
         this.users = users;
     }
 
-    public void setUsersFromParticipants(List<Long> participants){
+    public void setUsersFromParticipants(List<Long> participants) {
 
     }
 

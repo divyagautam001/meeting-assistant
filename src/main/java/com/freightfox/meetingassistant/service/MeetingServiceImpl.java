@@ -9,9 +9,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MeetingServiceImpl implements MeetingService{
@@ -29,7 +27,7 @@ public class MeetingServiceImpl implements MeetingService{
         }
         meeting.setHost(host);
 
-        List<User> participants = new ArrayList<>();
+        Set<User> participants = new HashSet<>();
         for (Long participantId : meetingRequest.getParticipants()) {
             User participant = userRepository.findById(participantId).orElse(null);
             if (participant != null) {
